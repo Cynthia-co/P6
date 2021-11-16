@@ -11,6 +11,8 @@ mongoose
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
+const Sauce = require('./models/sauces');
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -26,53 +28,39 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.post("/api/stuff", (req, res, next) => {
-  console.log(req.body);
-  res.status(201).json({
-    message: "Objet créé !",
+app.post('/api/sauces', (req, res, next) => {
+  delete req.body._id;
+  const sauce = new Sauce({
+    ...req.body
   });
-  next();
+  thing.save()
+    .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
+    .catch(error => res.status(400).json({ error }));
 });
 
-app.use("/api/sauces", (req, res, next) => {
-  const sauces = [
-    {
-      _id: "oeihfzeoi",
-      name: "Mon premier objet",
-      manufacturer: "",
-      description: "",
-      mainPepper: "",
-      imageUrl: "",
-      heat: 3,
-      likes: 3,
-      dislikes: 4,
-      userId: "qsomihvqios",
-    },
-    {
-      _id: "oeihfzeomoihi",
-      title: "Mon deuxième objet",
-      description: "Les infos de mon deuxième objet",
-      imageUrl: "",
-      price: 2900,
-      userId: "qsomihvqios",
-    },
-  ];
-  res.status(200).json(sauces);
-  next();
+
+
+app.get('/api/sauces/:id', (req, res, next) => {
+  Thing.findOne({ _id: req.params.id })
+    .then(sauce => res.status(200).json(sauce))
+    .catch(error => res.status(404).json({ error }));
 });
 
-app.use((req, res, next) => {
-  res.status(201);
-  next();
+app.get('/api/sauces', (req, res, next) => {
+  Sauce.find()
+    .then(sauces => res.status(200).json(sauces))
+    .catch(error => res.status(400).json({ error }));
 });
 
-app.use((req, res, next) => {
-  res.json({ message: "Votre requête a bien été reçue !" });
-  next();
+app.put('/api/saucesf/:id', (req, res, next) => {
+  Sauce.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+    .then(() => res.status(200).json({ message: 'Sauce modifiée !'}))
+    .catch(error => res.status(400).json({ error }));
 });
 
-app.use((req, res, next) => {
-  console.log("Réponse envoyée avec succès !");
+app.delete('/api/sauces/:id', (req, res, next) => {
+  Sauce.deleteOne({ _id: req.params.id })
+    .then(() => res.status(200).json({ message: 'Sauce supprimée !'}))
+    .catch(error => res.status(400).json({ error }));
 });
-
 module.exports = app;
