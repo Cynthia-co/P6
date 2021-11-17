@@ -1,11 +1,12 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 
+const mongoose = require("mongoose");
+const helmet = require('helmet');
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
 const app = express();
+
 mongoose
   .connect(
     'mongodb+srv://cluster0.re2if.mongodb.net/Cluster0" --username <users>',
@@ -27,8 +28,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
-
+app.use(express.json());
+app.use(helmet());
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
