@@ -4,16 +4,15 @@ const mongoose = require("mongoose");
 const helmet = require('helmet');
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
-
+const path = require('path');
 const app = express();
 
 mongoose
-  .connect(
-    'mongodb+srv://cluster0.re2if.mongodb.net/Cluster0" --username <users>',
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect('mongodb+srv://cynco:ocrform5@cluster0.re2if.mongodb.net/piquante?retryWrites=true&w=majority',
+  { useNewUrlParser: true,
+    useUnifiedTopology: true })
   .then(() => console.log("Connexion à MongoDB réussie !"))
-  .catch(() => console.log("Connexion à MongoDB échouée !"));
+  .catch((e) => console.log("Connexion à MongoDB échouée !",));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -28,6 +27,8 @@ app.use((req, res, next) => {
   next();
 });
 
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(express.json());
 app.use(helmet());
 app.use('/api/sauces', sauceRoutes);
