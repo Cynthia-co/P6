@@ -2,8 +2,10 @@ const express = require("express");
 
 const mongoose = require("mongoose");
 const helmet = require('helmet');
+
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
+
 const path = require('path');
 const app = express();
 
@@ -27,10 +29,13 @@ app.use((req, res, next) => {
   next();
 });
 
-
-app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use(express.json());
 app.use(helmet());
+app.use(express.json({
+  type: "/" // optional, only if you want to be sure that everything is parsed as JSON. Wouldn't recommend
+}));
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
