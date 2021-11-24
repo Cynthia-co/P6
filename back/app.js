@@ -5,16 +5,18 @@ const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 const path = require('path');
 const app = express();
+const mongoSanitize = require('express-mongo-sanitize');
 const rateLimit = require("express-rate-limit");
 require('dotenv').config();
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  windowMs: 10 * 60 * 1000, 
+  max: 5
 });
 
 mongoose
-  .connect('mongodb+srv://cynco:ocrform5@cluster0.re2if.mongodb.net/piquante?retryWrites=true&w=majority',
+  .connect(
+  process.env.SECRET_MONGO,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log("Connexion à MongoDB réussie !"))
@@ -32,6 +34,8 @@ app.use((req, res, next) => {
 
 app.use(helmet());
 app.use(express.json());
+//contre l'injection de requêtes NoSQL
+app.use(mongoSanitize());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);

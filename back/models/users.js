@@ -18,8 +18,9 @@ passwordSchema
 .is().max(30)                                  
 .has().uppercase()                              
 .has().lowercase()                              
-.has().digits(2)                                
+.has().digits()                                
 .has().not().spaces()                           
-.is().not().oneOf(['Passw0rd', 'Password123']);
+
 
 module.exports = mongoose.model("User", userSchema);
+module.exports = passwordSchema;
