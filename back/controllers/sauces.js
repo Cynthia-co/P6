@@ -14,8 +14,8 @@ exports.createSauce = (req, res, next) => {
     //initialiser les valeurs de like et dislike 
     likes: 0,
     dislikes: 0,
-    usersLiked: [' '],
-    usersdisLiked: [' ']
+    usersLiked: [],
+    usersdisLiked: []
   });
   sauce
     .save()
@@ -40,7 +40,7 @@ exports.getAllSauce = (req, res, next) => {
   
 };
 
-//Modifier les informations d'une sauce et mettre à jour
+//Modifier les informations d'une sauce et mettre à jour selon notre id
 exports.modifySauce = (req, res, next) => {
   const sauceObject = req.file
     ? {
@@ -56,11 +56,10 @@ exports.modifySauce = (req, res, next) => {
   )
     .then(() => res.status(200).json({ message: "Sauce modifiée !" }))
     .catch((error) => res.status(400).json({ error }));
-  
 };
 
 
-//Supprimer une sauce
+//Supprimer une sauce selon l'id utilisateur
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then((thing) => {
@@ -76,7 +75,7 @@ exports.deleteSauce = (req, res, next) => {
 };
 
 
-//Liker et disliker une sauce
+//Liker et disliker une sauce selon l'utilisateur 1 seule fois
 exports.likesDislikes = (req, res, next) => {
   if (req.body.like === 1) {  
    Sauce.findOne({ _id: req.params.id })

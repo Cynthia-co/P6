@@ -1,11 +1,13 @@
+//Déclaration de la constante pour utiliser multer
 const multer = require('multer');
-
+//Types d'images supportés
 const MIME_TYPES = {
   'image/jpg': 'jpg',
   'image/jpeg': 'jpg',
   'image/png': 'png'
 };
 
+//Renommer les images et les stocker
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, 'images');

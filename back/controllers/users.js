@@ -1,9 +1,11 @@
+//Déclaration des constantes et packages à utiliser
 const bcrypt = require('bcrypt');
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
 
-
+//Inscription de l'utilisateur
 exports.signup = (req, res, next) => {
+  //utilisation de bcrypt pour hasher le mot de passe
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
       const user = new User({
@@ -18,6 +20,8 @@ exports.signup = (req, res, next) => {
   
 };
 
+
+//Connexion d'un utilisateur et attribution d'un token utilisateur
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
     .then(user => {
