@@ -14,7 +14,7 @@ require('dotenv').config();
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, 
-  max: 5
+  max: 100
 });
 
 //Connexion à la base de données mongoDB

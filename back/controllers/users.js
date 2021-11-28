@@ -2,9 +2,29 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
+const passwordValidator = require('password-validator'); 
+const emailValidator = require("email-validator"); 
+const passwordSchema = new passwordValidator();
+
+//Modèle du format de mot de passe requis
+passwordSchema
+.is().min(8)                                    
+.is().max(100)                                  
+.has().uppercase()                              
+.has().lowercase()                              
+.has().digits()                                
+.has().not().spaces()   
 
 //Inscription de l'utilisateur
 exports.signup = (req, res, next) => {
+  //Vérification du format de l'adresse mail
+  if (!emailValidator.validate(req.body.email)){
+    return res.status(401).json({message: 'Veuillez entrer une adresse email valide'});
+}
+//Vérification du format du mot de passe
+if (!passwordSchema.validate(req.body.password)){ 
+    return res.status(401).json({message: `Le mot de passe doit contenir au moins 8 caractères avec un chiffre, une minuscule, une majuscule et pas d'espace`});
+};
   //utilisation de bcrypt pour hasher le mot de passe
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
