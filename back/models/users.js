@@ -1,7 +1,5 @@
 const mongoose = require ('mongoose');
-
 const uniqueValidator = require('mongoose-unique-validator');
-
 
 //Modèle de l'utilisateur pour l'inscription et l'identification
 const userSchema = mongoose.Schema({
